@@ -16,12 +16,8 @@
                     </div>
                 </div>
                 <div class="flex space-x-1 text-xs">
-                    <div class="rounded-md border px-2 py-1">
-                        {{ ucfirst($job->experience) }}
-                    </div>
-                    <div class="rounded-md border px-2 py-1">
-                        {{ $job->category }}
-                    </div>
+                    <x-tag>{{ ucfirst($job->experience) }}</x-tag>
+                    <x-tag>{{ $job->category }}</x-tag>
                 </div>
             </div>
             <p>
