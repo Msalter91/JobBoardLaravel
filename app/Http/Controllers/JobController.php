@@ -23,9 +23,11 @@ class JobController extends Controller
         //
     }
 
-    public function show(string $id)
+    // This is an example of route model binding
+    public function show(Job $job)
     {
-        //
+        // compact passes the job variable as an array with the name job nice and simple
+        return view('job.show', compact('job'));
     }
 
     public function edit(string $id)
