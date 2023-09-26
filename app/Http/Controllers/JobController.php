@@ -9,8 +9,30 @@ class JobController extends Controller
 {
     public function index(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
+        //When function will only run this filtering function if the request 'search' param is not null
+        //orWhere is basically a || in this case
+        $jobs = Job::query();
+        $jobs->when(request('search'), function ($query) {
+            //Wrapping in a query function works like brackets in the eventual sql statement
+            $query->where(function ($query) {
+                $query->where('title', 'like', '%'. request('search') .'%')
+                    ->orWhere('description', 'like', '%'. request('search') .'%');
+            });
+        })->when(request('min_salary'), function ($query) {
+            $query->where('salary', '>=', request('min_salary'));
+        })
+                ->when(request('max_salary'), function ($query) {
+                    $query->where('salary', '<=', request('max_salary'));
+        })
+            ->when(request('experience'), function ($query) {
+                $query->where('experience', request('experience'));
+            })
+            ->when(request('category'), function ($query) {
+                $query->where('category', request('category'));
+            });
+
         // Called when the job index route is hit - uses the Job model to fetch all the Jobs from the DB
-        return view('job.index', ['jobs' => Job::all()]);
+        return view('job.index', ['jobs' => $jobs->get()]);
     }
 
     public function create()
